@@ -1,9 +1,11 @@
 /* eslint-env node */
 
-import {chrome} from '../../.electron-vendors.cache.json';
-import {join} from 'path';
-import {builtinModules} from 'module';
+import { chrome } from '../../.electron-vendors.cache.json';
+import { join } from 'path';
+import { builtinModules } from 'module';
 import vue from '@vitejs/plugin-vue';
+import Components from 'unplugin-vue-components/vite'
+import ViteComponents, { AntDesignVueResolver } from 'unplugin-vue-components/resolvers'
 
 const PACKAGE_ROOT = __dirname;
 
@@ -19,7 +21,15 @@ const config = {
       '/@/': join(PACKAGE_ROOT, 'src') + '/',
     },
   },
-  plugins: [vue()],
+  plugins: [
+    vue(),
+    Components({
+      dts: true,
+      resolvers: [
+        AntDesignVueResolver()
+      ]
+    })
+  ],
   base: '',
   server: {
     fs: {
