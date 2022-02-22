@@ -1,5 +1,7 @@
 <template>
-  <div>page1</div>
+  <div>
+    setting
+  </div>
 </template>
 
 <script lang="ts">
@@ -10,5 +12,5 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 </style>

@@ -4,6 +4,7 @@
 
 import {contextBridge} from 'electron';
 import {sha256sum} from '/@/sha256sum';
+import {ipcRenderer} from 'electron';
 
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
@@ -34,3 +35,5 @@ contextBridge.exposeInMainWorld('versions', process.versions);
  * window.nodeCrypto('data')
  */
 contextBridge.exposeInMainWorld('nodeCrypto', {sha256sum});
+// 进程通信工具
+contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer);
