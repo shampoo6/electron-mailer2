@@ -28,17 +28,13 @@ const routes = [
         path: 'template',
         component: Template,
         children: [
-          // {
-          //   path: '',
-          //   redirect: '/template/templates'
-          // },
           {
             path: 'templates',
             meta: {title: '模板管理'},
             component: () => import('/@/pages/Template/Template.vue')
           },
           {
-            path: 'edit',
+            path: 'edit/:id',
             meta: {title: '模板编辑'},
             component: () => import('/@/pages/Template/EditTemplate.vue')
           }

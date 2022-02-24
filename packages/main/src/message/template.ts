@@ -92,3 +92,16 @@ ipcMain.on('template/remove', async (event, args) => {
 
   event.returnValue = ''
 })
+
+ipcMain.on('template/findById', async (event, args) => {
+  if (!args) {
+    event.returnValue = ''
+    return
+  }
+  let templates = await fileUtils.getDocument(documentName);
+  if (!templates) {
+    event.returnValue = ''
+    return
+  }
+  event.returnValue = templates[args] ? JSON.stringify(templates[args]) : null
+})

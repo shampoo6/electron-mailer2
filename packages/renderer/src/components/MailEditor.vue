@@ -62,6 +62,7 @@
 import {reactive, ref, toRefs} from 'vue'
 import * as Quill from 'quill'
 
+
 const Delta = Quill.import('delta');
 
 // 将 json 对象转换成 quill delta 对象

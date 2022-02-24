@@ -2,13 +2,15 @@
   <router-view></router-view>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import {defineComponent} from "vue";
+
+export default defineComponent({
   name: "Index",
   created() {
     this.$router.replace('/template/templates')
   }
-}
+})
 </script>
 
 <style scoped>

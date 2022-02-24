@@ -81,7 +81,7 @@ import {
 } from "@ant-design/icons-vue";
 import event from '/@/utils/event'
 
-export default {
+export default defineComponent({
   setup() {
     const state = reactive({
       title: '模块管理',
@@ -108,8 +108,7 @@ export default {
   },
   created() {
     let result = this.$route.path.match(/^\/[^\/]*(?=\/?)/)
-    this.selectedKeys[0] = result[0]
-
+    this.selectedKeys[0] = result ? result[0] : ''
     this.title = this.$route.meta.title
   },
   methods: {
@@ -117,7 +116,7 @@ export default {
       this.$router.replace(selectedKeys[0])
     }
   },
-};
+})
 </script>
 
 <style lang="scss" scoped>
@@ -127,6 +126,7 @@ export default {
 
 .content {
   height: calc(100vh - 64px - 70px - 74px);
+  overflow: auto;
 }
 
 .header {
