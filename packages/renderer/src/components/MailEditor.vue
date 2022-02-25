@@ -24,8 +24,8 @@
         <div class="group-title">邮件内容</div>
         <a-divider></a-divider>
       </div>
-      <a-form-item label="寄件人姓名" name="creatorName">
-        <a-input v-model:value="data.creatorName"/>
+      <a-form-item label="寄件人姓名" name="sender">
+        <a-input v-model:value="data.sender"/>
       </a-form-item>
       <a-form-item label="收件邮箱" name="to">
         <a-input v-model:value="data.to"/>
@@ -61,26 +61,10 @@
 <script lang="ts">
 import {reactive, ref, toRefs} from 'vue'
 import * as Quill from 'quill'
+import {Mail} from "/@/model/mail";
 
 
 const Delta = Quill.import('delta');
-
-// 将 json 对象转换成 quill delta 对象
-const jsonToDelta = (json) => {
-  if (!json.ops) return null
-  let d = new Delta()
-  for (const opt of json.ops) {
-    for (const key in opt) {
-      let fn = d[key]
-      if (fn) {
-        fn = fn.bind(d)
-        fn(opt[key], opt.attributes)
-        break;
-      }
-    }
-  }
-  return d
-}
 
 export default {
   name: 'MailEditor',
@@ -92,7 +76,7 @@ export default {
         from: '',
         pwd: '',
         smtp: '',
-        creatorName: '',
+        sender: '',
         to: '',
         copy: '',
         subject: '',
@@ -103,44 +87,24 @@ export default {
     const editorRef = ref(null)
     const signRef = ref(null)
 
-    const reset = () => {
-      formRef.value.resetFields()
-      state.quill.setText('')
-      state.sign.setText('')
-    }
-
-    const getData = () => {
+    const getData: () => Mail = () => {
       let data = JSON.parse(JSON.stringify(state.data))
-      data.content = state.quill.getContents()
-      data.sign = state.sign.getContents()
-      console.log(data)
-      console.log(JSON.stringify(data.content))
+      data.content = (state.quill as any).container.children[0].innerHTML
+      data.sign = (state.sign as any).container.children[0].innerHTML
       return data
     }
 
-    const setData = (data: { [key: string]: any }) => {
+    const setData = (data: Mail) => {
       for (const key in state.data) {
-        state.data[key] = data[key]
+        (state.data as any)[key] = (data as any)[key]
       }
-      try {
-        const content = data.content
-        console.log(content)
-        state.quill.setContents(jsonToDelta(content))
-      } catch (e) {
-      }
-      try {
-        const sign = data.sign
-        console.log(sign)
-        state.sign.setContents(jsonToDelta(sign))
-      } catch (e) {
-      }
-
+      (state.quill as any).container.children[0].innerHTML = data.content;
+      (state.sign as any).container.children[0].innerHTML = data.sign;
     }
 
     return {
       ...toRefs(state),
       formRef,
-      reset,
       editorRef,
       signRef,
       getData,
@@ -183,7 +147,7 @@ export default {
         smtp: [
           {required: true, message: '请输入smtp服务器', trigger: 'blur'},
         ],
-        creatorName: [
+        sender: [
           {required: true, message: '请输入寄件人姓名', trigger: 'blur'},
         ],
         to: [
@@ -198,16 +162,17 @@ export default {
     }
   },
   mounted() {
-    this.quill = new Quill(this.$refs.editorRef, {
+    const that: any = (this as any)
+    that.quill = new Quill(that.$refs.editorRef, {
       theme: 'snow',
       modules: {
-        toolbar: this.toolbarOptions
+        toolbar: that.toolbarOptions
       }
     })
-    this.sign = new Quill(this.$refs.signRef, {
+    that.sign = new Quill(that.$refs.signRef, {
       theme: 'snow',
       modules: {
-        toolbar: this.toolbarOptions
+        toolbar: that.toolbarOptions
       }
     })
   }

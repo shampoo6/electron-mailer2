@@ -1,9 +1,11 @@
+import {Template} from "/@/model/template";
+
 export default {
   test() {
     window.ipcRenderer.send('template/test', {a: 1, b: 2})
   },
-  save(templateData: string) {
-    window.ipcRenderer.sendSync('template/save', templateData)
+  save(template: Template) {
+    window.ipcRenderer.sendSync('template/save', JSON.stringify(template))
   },
   list() {
     return JSON.parse(window.ipcRenderer.sendSync('template/list'))

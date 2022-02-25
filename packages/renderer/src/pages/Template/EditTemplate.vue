@@ -40,8 +40,9 @@
 </template>
 
 <script lang="ts">
-import {reactive, toRefs, defineComponent} from "vue";
+import {reactive, toRefs, defineComponent, ref} from "vue";
 import templateApi from "/@/api/template";
+import router from "/@/routers";
 
 const insertText = '新增'
 const editText = '编辑'
@@ -49,6 +50,7 @@ const editText = '编辑'
 export default defineComponent({
   setup() {
     const state = reactive({
+      isNew: true,
       title: insertText,
       data: {
         _id: '',
@@ -61,21 +63,34 @@ export default defineComponent({
       }
     })
 
+    const me = ref(null)
+
     const save = () => {
-      // todo
-      console.log('save')
+      if (!me.value) return
+      const template = (me.value as any).getData()
+      template.id = state.data._id
+      template.name = state.data.name
+      template.description = state.data.description
+      templateApi.save(template)
+      router.back()
     }
 
     return {
       ...toRefs(state),
-      save
+      save,
+      me
     }
   },
-  created() {
-    console.log(this.$route.params)
-    if (this.$route.params.id !== '0') {
-      let template = templateApi.findById(this.$route.params.id)
-      console.log(template)
+  mounted() {
+    this.isNew = this.$route.params.id === '0'
+    this.title = this.isNew ? insertText : editText
+    if (!this.isNew) {
+      let template = templateApi.findById((this.$route.params as any).id)
+      // 回显数据
+      this.data._id = template.id
+      this.data.name = template.name
+      this.data.description = template.description;
+      (this.$refs as any).me.setData(template);
     }
   }
 })

@@ -6,7 +6,6 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-  name: "Index",
   created() {
     this.$router.replace('/template/templates')
   }

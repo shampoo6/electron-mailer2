@@ -47,6 +47,8 @@ import {reactive, toRefs, ref, nextTick, defineComponent} from 'vue'
 import MailEditor from '/@/components/MailEditor.vue'
 import templateApi from '../../api/template'
 import router from "/@/routers";
+import {message} from 'ant-design-vue'
+import {Template} from "/@/model/template";
 
 export default defineComponent({
   setup() {
@@ -80,15 +82,7 @@ export default defineComponent({
       router.push('/template/edit/0')
     }
 
-    const onClose = () => {
-      // 重置表单
-      me.value.reset()
-      state.data._id = ''
-      formRef.value.resetFields()
-      visible.value = false
-    }
-
-    const modifyTemplate = (template) => {
+    const modifyTemplate = (template: Template) => {
       // visible.value = true
       // state.data._id = template.id
       // state.data.name = template.name
@@ -99,27 +93,20 @@ export default defineComponent({
       router.push(`/template/edit/${template.id}`)
     }
 
-    const remove = (record) => {
+    const remove = (record: Template) => {
       templateApi.remove(record.id)
       list()
     }
 
-    const save = () => {
-      let data = me.value.getData()
-      data = {...data, id: state.data._id, name: state.data.name, description: state.data.description}
-      templateApi.save(JSON.stringify(data))
-      onClose()
-      list()
-    }
-
     const saveDefaultTemplateId = () => {
-      if (state.templateId)
+      if (state.templateId) {
         templateApi.saveDefaultTemplateId(state.templateId)
+        message.success('保存成功');
+      }
     }
 
     const list = () => {
       let data = templateApi.list()
-      console.log(data)
       let rowData = []
       for (const key in data) {
         if (key === 'defaultTemplateId') continue
@@ -135,12 +122,10 @@ export default defineComponent({
       ...toRefs(state),
       visible,
       addTemplate,
-      onClose,
       modifyTemplate,
       me,
       formRef,
       remove,
-      save,
       list,
       saveDefaultTemplateId
     }
