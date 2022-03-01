@@ -1,4 +1,5 @@
 import {Template} from "/@/model/template";
+import {notification} from "ant-design-vue";
 
 export default {
   test() {
@@ -19,5 +20,17 @@ export default {
   findById(id: string) {
     let result = window.ipcRenderer.sendSync('template/findById', id)
     return result ? JSON.parse(result) : null
+  },
+  getDefaultTemplate() {
+    let result = window.ipcRenderer.sendSync('template/getDefaultTemplate')
+    if (!result) {
+      notification.error({
+        message: '系统错误',
+        description:
+          '未找到邮件模板，请在模板管理中定义并设置默认模板。',
+      });
+      return null
+    }
+    return JSON.parse(result)
   }
 }

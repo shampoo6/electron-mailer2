@@ -45,6 +45,7 @@ app.whenReady()
   })
   .then(restoreOrCreateWindow)
   .then(() => import('./message/template'))
+  .then(() => import('./message/mailer'))
   .catch((e) => console.error('Failed create window:', e));
 
 

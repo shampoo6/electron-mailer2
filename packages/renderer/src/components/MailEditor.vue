@@ -39,18 +39,15 @@
       <a-form-item label="邮件内容头" name="head">
         <div>
           <div ref="editorRef">
-            <!--            <p>Hello World!</p>
-                        <p>Some initial <strong>bold</strong> text</p>
-                        <p><br></p>-->
           </div>
         </div>
+      </a-form-item>
+      <a-form-item label="AI续写长度" name="length">
+        <a-input type="number" v-model:value.number="data.length"/>
       </a-form-item>
       <a-form-item label="签名" name="sign">
         <div>
           <div ref="signRef">
-            <!--            <p>Hello World!</p>
-                        <p>Some initial <strong>bold</strong> text</p>
-                        <p><br></p>-->
           </div>
         </div>
       </a-form-item>
@@ -59,14 +56,14 @@
 </template>
 
 <script lang="ts">
-import {reactive, ref, toRefs} from 'vue'
+import {reactive, ref, toRefs, defineComponent} from 'vue'
 import * as Quill from 'quill'
 import {Mail} from "/@/model/mail";
 
 
 const Delta = Quill.import('delta');
 
-export default {
+export default defineComponent({
   name: 'MailEditor',
   setup() {
     const state = reactive({
@@ -80,6 +77,7 @@ export default {
         to: '',
         copy: '',
         subject: '',
+        length: 0
       },
     })
 
@@ -176,7 +174,7 @@ export default {
       }
     })
   }
-}
+})
 </script>
 
 <style lang="scss" scoped>

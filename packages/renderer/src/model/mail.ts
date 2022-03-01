@@ -17,5 +17,7 @@ export interface Mail {
   // 邮件内容 存储的一个富文本的 html 字符串
   content: string
   // 邮件签名 存储的一个富文本的 html 字符串
-  sign: string
+  sign: string,
+  // AI 续写的长度
+  length: number
 }

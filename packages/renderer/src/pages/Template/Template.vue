@@ -83,13 +83,6 @@ export default defineComponent({
     }
 
     const modifyTemplate = (template: Template) => {
-      // visible.value = true
-      // state.data._id = template.id
-      // state.data.name = template.name
-      // state.data.description = template.description
-      // nextTick(() => {
-      //   me.value.setData(template)
-      // })
       router.push(`/template/edit/${template.id}`)
     }
 

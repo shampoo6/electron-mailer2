@@ -90,7 +90,7 @@ export default defineComponent({
       this.data._id = template.id
       this.data.name = template.name
       this.data.description = template.description;
-      (this.$refs as any).me.setData(template);
+      (this.$refs as any).me.setData(template.mail);
     }
   }
 })
