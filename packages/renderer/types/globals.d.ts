@@ -2,6 +2,8 @@ export {};
 
 declare global {
   interface Window {
-    ipcRenderer: any
+    ipcRenderer: any,
+    ipcReceive: any,
+    ipcReceiveOnce: any
   }
 }

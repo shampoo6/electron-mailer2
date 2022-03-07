@@ -88,6 +88,7 @@ export default defineComponent({
     const getData: () => Mail = () => {
       let data = JSON.parse(JSON.stringify(state.data))
       data.content = (state.quill as any).container.children[0].innerHTML
+      data.text = (state.quill as any).container.children[0].innerText
       data.sign = (state.sign as any).container.children[0].innerHTML
       return data
     }

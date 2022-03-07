@@ -10,6 +10,7 @@ const config: Template = {
   description: "每次清空模板后会自动创建的模板",
   mail: {
     content: "<p>亲爱的同志，这里有一封正准备发送出去的邮件。</p>",
+    text: '亲爱的同志，这里有一封正准备发送出去的邮件。',
     copy: "2721445883@qq.com, hywllxf@163.com", from: "shampoo6@163.com",
     pwd: "PDIVXWEXEPZWGXDR",
     sender: "陆宪甫",
@@ -17,7 +18,7 @@ const config: Template = {
     smtp: "smtp.163.com",
     subject: "测试邮件",
     to: "454714691@qq.com",
-    length: 200
+    length: 50
   }
 }
 

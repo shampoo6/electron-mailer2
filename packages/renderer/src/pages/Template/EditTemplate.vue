@@ -43,6 +43,8 @@
 import {reactive, toRefs, defineComponent, ref} from "vue";
 import templateApi from "/@/api/template";
 import router from "/@/routers";
+import {Mail} from "/@/model/mail";
+import {Template} from "/@/model/template";
 
 const insertText = '新增'
 const editText = '编辑'
@@ -67,10 +69,13 @@ export default defineComponent({
 
     const save = () => {
       if (!me.value) return
-      const template = (me.value as any).getData()
-      template.id = state.data._id
-      template.name = state.data.name
-      template.description = state.data.description
+      const mail: Mail = (me.value as any).getData()
+      let template: Template = {
+        id: state.data._id,
+        name: state.data.name,
+        description: state.data.description,
+        mail
+      }
       templateApi.save(template)
       router.back()
     }

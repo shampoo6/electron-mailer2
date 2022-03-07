@@ -1,7 +1,9 @@
 import {app} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
-import fileUtils from "/@/utils/fileUtils";
+import fileUtils from '/@/utils/fileUtils';
+
+console.log(process.env)
 
 /**
  * Prevent multiple instances
@@ -38,14 +40,17 @@ app.on('activate', restoreOrCreateWindow);
  * Create app window when background process will be ready
  */
 app.whenReady()
+  // .then(() => import('./checkUpdate'))
   .then(() => fileUtils.getAppDataPathWithExist('savedData'))
   .then((savePath) => {
-    global.savePath = savePath // 保存路径
-    return Promise.resolve()
+    global.savePath = savePath; // 保存路径
+    return Promise.resolve();
   })
   .then(restoreOrCreateWindow)
   .then(() => import('./message/template'))
   .then(() => import('./message/mailer'))
+  .then(() => import('./message/notification'))
+  .then(() => import('./message/task'))
   .catch((e) => console.error('Failed create window:', e));
 
 

@@ -2,9 +2,8 @@
  * @module preload
  */
 
-import {contextBridge} from 'electron';
+import {contextBridge, ipcRenderer} from 'electron';
 import {sha256sum} from '/@/sha256sum';
-import {ipcRenderer} from 'electron';
 
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
@@ -37,3 +36,13 @@ contextBridge.exposeInMainWorld('versions', process.versions);
 contextBridge.exposeInMainWorld('nodeCrypto', {sha256sum});
 // 进程通信工具
 contextBridge.exposeInMainWorld('ipcRenderer', ipcRenderer);
+contextBridge.exposeInMainWorld('ipcReceive', (channel: string, callback: any) => {
+  ipcRenderer.on(channel, (event, args) => {
+    if (typeof callback === "function") callback(args)
+  })
+});
+contextBridge.exposeInMainWorld('ipcReceiveOnce', (channel: string, callback: any) => {
+  ipcRenderer.once(channel, (event, args) => {
+    if (typeof callback === "function") callback(args)
+  })
+});

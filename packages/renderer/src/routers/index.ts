@@ -1,9 +1,9 @@
-import {createRouter, createWebHashHistory} from 'vue-router'
-import Home from '/@/pages/Home.vue'
-import Help from '../pages/Help.vue'
-import Template from '/@/pages/Template/Index.vue'
-import event from '/@/utils/event'
+import {createRouter, createWebHashHistory} from 'vue-router';
+import Home from '/@/pages/Home.vue';
+import Help from '../pages/Help.vue';
+import Template from '/@/pages/Template/Index.vue';
 
+import event from '/@/utils/event';
 
 const routes = [
   {
@@ -48,19 +48,19 @@ const routes = [
       {
         path: 'task',
         meta: {title: '任务管理'},
-        component: () => import('/@/pages/Task.vue')
+        component: () => import('/@/pages/Task/Index.vue')
       },
     ]
   }
-]
+];
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
 
 router.afterEach((to, from) => {
-  event.notify('afterRouteEnter', to.meta ? to.meta.title : '')
-})
+  event.notify('afterRouteEnter', to.meta ? to.meta.title : '');
+});
 
-export default router
+export default router;

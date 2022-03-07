@@ -14,7 +14,7 @@ export default {
       to: mail.to,
       cc: mail.copy,
       subject: mail.subject,
-      html: mail.content + mail.sign
+      html: `<p>${mail.text}</p>${mail.sign}`
     })
   }
 }
