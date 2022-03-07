@@ -9,7 +9,7 @@ if (process.env.VITE_APP_VERSION === undefined) {
  */
 const config = {
   extraResources: [
-    'run'
+    // 'run'
   ],
   directories: {
     output: 'dist',
@@ -19,12 +19,20 @@ const config = {
     'packages/**/dist/**',
   ],
   extraMetadata: {
-    version: process.env.VITE_APP_VERSION,
+    // version: process.env.VITE_APP_VERSION,
+    version: process.env.npm_package_version,
   },
   nsis: {
     oneClick: false,
     allowToChangeInstallationDirectory: true,
-  }
+  },
+  publish: [
+    {
+      provider: "github",
+      owner: "shampoo6",
+      repo: "electron-mailer2"
+    }
+  ]
 };
 
 module.exports = config;

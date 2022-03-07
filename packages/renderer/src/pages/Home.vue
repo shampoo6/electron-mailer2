@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-layout>
-      <a-layout-header class="header">Electron Mailer 2</a-layout-header>
+      <a-layout-header class="header">Electron Mailer 2 v{{version}}</a-layout-header>
       <a-layout-content>
         <a-layout>
           <a-layout-sider style="background-color: #fff">
@@ -95,6 +95,7 @@ export default defineComponent({
 
     return {
       ...toRefs(state),
+      version: window.projectVersion
     };
   },
   components: {

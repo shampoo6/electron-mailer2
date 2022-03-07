@@ -1,5 +1,6 @@
 // Inital app
-const electron = require('electron');
+import {ipcMain, BrowserWindow} from 'electron';
+
 const updater = require('electron-updater');
 const autoUpdater = updater.autoUpdater;
 
@@ -16,17 +17,15 @@ autoUpdater.on('checking-for-update', function () {
 
 autoUpdater.on('update-available', function (info: any) {
   sendStatusToWindow('Update available.');
-  console.log(info);
 });
 
 autoUpdater.on('update-not-available', function (info: any) {
   sendStatusToWindow('Update not available.');
-  console.log(info);
 });
 
 autoUpdater.on('error', function (err: any) {
   sendStatusToWindow('Error in auto-updater.');
-  console.error(err);
+  sendStatusToWindow(err);
 });
 
 autoUpdater.on('download-progress', function (progressObj: any) {
@@ -38,7 +37,6 @@ autoUpdater.on('download-progress', function (progressObj: any) {
 
 autoUpdater.on('update-downloaded', function (info: any) {
   sendStatusToWindow('Update downloaded; will install in 1 seconds');
-  console.log(info);
 });
 
 autoUpdater.on('update-downloaded', function (info: any) {
@@ -47,8 +45,15 @@ autoUpdater.on('update-downloaded', function (info: any) {
   }, 1000);
 });
 
-autoUpdater.checkForUpdates();
+// autoUpdater.checkForUpdates();
 
 function sendStatusToWindow(message: string) {
   console.log(message);
+  let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
+  (window as any).webContents.send('checkUpdate/info', message);
 }
+
+ipcMain.on('checkUpdate/start', () => {
+  autoUpdater.checkForUpdates();
+});
+

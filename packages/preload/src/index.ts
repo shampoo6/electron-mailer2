@@ -4,6 +4,7 @@
 
 import {contextBridge, ipcRenderer} from 'electron';
 import {sha256sum} from '/@/sha256sum';
+const json = require('../../../package.json')
 
 /**
  * The "Main World" is the JavaScript context that your main renderer code runs in.
@@ -27,6 +28,7 @@ import {sha256sum} from '/@/sha256sum';
  * console.log( window.versions )
  */
 contextBridge.exposeInMainWorld('versions', process.versions);
+contextBridge.exposeInMainWorld('projectVersion', json.version);
 
 /**
  * Safe expose node.js API

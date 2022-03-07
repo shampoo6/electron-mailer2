@@ -5,5 +5,6 @@ declare global {
     ipcRenderer: any,
     ipcReceive: any,
     ipcReceiveOnce: any
+    projectVersion: string
   }
 }
