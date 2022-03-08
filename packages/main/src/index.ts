@@ -45,7 +45,6 @@ app.whenReady()
     return Promise.resolve();
   })
   .then(restoreOrCreateWindow)
-  .then(() => import('./message/checkUpdate'))
   .then(() => import('./message/template'))
   .then(() => import('./message/mailer'))
   .then(() => import('./message/notification'))
@@ -71,9 +70,8 @@ if (import.meta.env.DEV) {
  * Check new app version in production mode only
  */
 if (import.meta.env.PROD) {
-  // todo 暂时注释
-  // app.whenReady()
-  //   .then(() => import('electron-updater'))
-  //   .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
-  //   .catch((e) => console.error('Failed check updates:', e));
+  app.whenReady()
+    .then(() => import('electron-updater'))
+    .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
+    .catch((e) => console.error('Failed check updates:', e));
 }
