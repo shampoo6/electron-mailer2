@@ -20,7 +20,7 @@ const config = {
   ],
   extraMetadata: {
     // version: process.env.VITE_APP_VERSION,
-    version: process.env.npm_package_version,
+    version: 'v' + process.env.npm_package_version,
   },
   nsis: {
     oneClick: false,
