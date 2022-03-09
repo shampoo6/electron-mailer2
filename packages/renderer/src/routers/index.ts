@@ -2,6 +2,7 @@ import {createRouter, createWebHashHistory} from 'vue-router';
 import Home from '/@/pages/Home.vue';
 import Help from '../pages/Help.vue';
 import Template from '/@/pages/Template/Index.vue';
+import AppUpdate from '/@/pages/AppUpdate.vue';
 
 import event from '/@/utils/event';
 
@@ -51,6 +52,10 @@ const routes = [
         component: () => import('/@/pages/Task/Index.vue')
       },
     ]
+  },
+  {
+    path: '/app-update',
+    component: AppUpdate
   }
 ];
 

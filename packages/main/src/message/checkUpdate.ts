@@ -29,10 +29,17 @@ autoUpdater.on('error', function (err: any) {
 });
 
 autoUpdater.on('download-progress', function (progressObj: any) {
-  let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
-  log_message = log_message + ' - Downloaded ' + parseInt(progressObj.percent) + '%';
-  log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
-  sendStatusToWindow(log_message);
+  // let log_message = 'Download speed: ' + progressObj.bytesPerSecond;
+  // log_message = log_message + ' - Downloaded ' + parseInt(progressObj.percent) + '%';
+  // log_message = log_message + ' (' + progressObj.transferred + '/' + progressObj.total + ')';
+  let info = {
+    speed: progressObj.bytesPerSecond,
+    percent: progressObj.percent,
+    transferred: progressObj.transferred,
+    total: progressObj.total
+  };
+
+  sendStatusToWindow(JSON.stringify(info));
 });
 
 autoUpdater.on('update-downloaded', function (info: any) {
