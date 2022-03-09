@@ -3,7 +3,11 @@
     <h1>{{ percent === 100 ? '更新完成' : '更新中' }}</h1>
     <a-progress type="circle" :percent="percent"/>
     <div class="info">
-      速度: {{ speed }} {{
+      速度: {{
+        speed > 1000000 ? speed / 1000000 :
+          speed > 1000 ? speed / 1000 :
+            speed
+      }} {{
         speed > 1000000 ? 'mb/s' :
           speed > 1000 ? 'kb/s' : 'b/s'
       }}; {{ `${transferred}/${total}` }} 已下载/总量
@@ -23,7 +27,7 @@ const total = ref(0);
 window.ipcReceive('checkUpdate/info', (message: any) => {
   try {
     const info = JSON.parse(message);
-    percent.value = info.percent;
+    percent.value = Number(Number(info.percent).toFixed(0));
     speed.value = info.speed;
     transferred.value = info.transferred;
     total.value = info.total;
