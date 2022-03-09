@@ -23,6 +23,8 @@ const config = {
     version: process.env.npm_package_version,
   },
   nsis: {
+    artifactName: "${name}-setup-${version}.${ext}",
+    deleteAppDataOnUninstall: true,
     oneClick: false,
     allowToChangeInstallationDirectory: true,
   },

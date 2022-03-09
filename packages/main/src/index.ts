@@ -69,9 +69,18 @@ if (import.meta.env.DEV) {
 /**
  * Check new app version in production mode only
  */
+// if (import.meta.env.PROD) {
+//   app.whenReady()
+//     .then(() => import('electron-updater'))
+//     .then(({autoUpdater}) => {
+//       return autoUpdater.checkForUpdatesAndNotify();
+//     })
+//     .catch((e) => {
+//       console.error('Failed check updates:', e);
+//     });
+// }
+
+// 修改自动更新逻辑，等待页面加载完成后的回调
 if (import.meta.env.PROD) {
-  app.whenReady()
-    .then(() => import('electron-updater'))
-    .then(({autoUpdater}) => autoUpdater.checkForUpdatesAndNotify())
-    .catch((e) => console.error('Failed check updates:', e));
+  import('./message/checkUpdate');
 }

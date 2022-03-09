@@ -54,6 +54,5 @@ function sendStatusToWindow(message: string) {
 }
 
 ipcMain.on('checkUpdate/start', () => {
-  autoUpdater.checkForUpdates();
+  autoUpdater.checkForUpdatesAndNotify();
 });
-
