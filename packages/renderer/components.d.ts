@@ -4,7 +4,6 @@
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AButton: typeof import('ant-design-vue/es')['Button']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
     ALayout: typeof import('ant-design-vue/es')['Layout']
     ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent']
@@ -13,7 +12,6 @@ declare module 'vue' {
     ALayoutSider: typeof import('ant-design-vue/es')['LayoutSider']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
-    AModal: typeof import('ant-design-vue/es')['Modal']
     APageHeader: typeof import('ant-design-vue/es')['PageHeader']
     AProgress: typeof import('ant-design-vue/es')['Progress']
     ElectronVersions: typeof import('./src/components/ElectronVersions.vue')['default']
@@ -21,7 +19,6 @@ declare module 'vue' {
     ReactiveCounter: typeof import('./src/components/ReactiveCounter.vue')['default']
     ReactiveHash: typeof import('./src/components/ReactiveHash.vue')['default']
     TemplateSelector: typeof import('./src/components/TemplateSelector.vue')['default']
-    UpdateModal: typeof import('./src/components/UpdateModal.vue')['default']
   }
 }
 
