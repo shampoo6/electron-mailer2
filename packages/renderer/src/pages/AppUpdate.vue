@@ -4,8 +4,8 @@
     <a-progress type="circle" :percent="percent"/>
     <div class="info">
       速度: {{
-        speed > 1000000 ? speed / 1000000 :
-          speed > 1000 ? speed / 1000 :
+        speed > 1000000 ? Number(speed / 1000000).toFixed(1) :
+          speed > 1000 ? Number(speed / 1000).toFixed(1) :
             speed
       }} {{
         speed > 1000000 ? 'mb/s' :
