@@ -1,6 +1,6 @@
 <template>
   <div>
-    setting
+    <a-card>开发中...</a-card>
   </div>
 </template>
 

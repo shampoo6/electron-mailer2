@@ -4,7 +4,8 @@
       layout="inline"
     >
       <a-form-item label="模板">
-        <TemplateSelector v-model:selected-id="selectedId" v-model:templates="templates"></TemplateSelector>
+        <TemplateSelector v-model:selected-id="selectedId" v-model:templates="templates"
+                          v-model:template-list="templateList"></TemplateSelector>
       </a-form-item>
       <a-form-item label="寄件时间">
         <a-time-picker v-model:value="time">
@@ -16,6 +17,12 @@
         <div v-if="tasks[current.format('yyyy-MM-DD')]">
           <div>{{ getTemplateName(tasks[current.format('yyyy-MM-DD')]) }}</div>
           <div>{{ getTaskPrepareSendTime(tasks[current.format('yyyy-MM-DD')].prepareSendTime) }}</div>
+          <div>
+            <a-badge v-if="tasks[current.format('yyyy-MM-DD')].state === TaskState.Waiting" status="default" text="等待中" />
+            <a-badge v-else-if="tasks[current.format('yyyy-MM-DD')].state === TaskState.Running" status="warning" text="执行中" />
+            <a-badge v-else-if="tasks[current.format('yyyy-MM-DD')].state === TaskState.Fail" status="error" text="失败" />
+            <a-badge v-else status="success" text="成功" />
+          </div>
         </div>
       </template>
     </a-calendar>
@@ -23,11 +30,11 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, reactive, ref} from 'vue';
+import {nextTick, onMounted, reactive, ref} from 'vue';
 import TemplateSelector from '/@/components/TemplateSelector.vue';
 import {Moment} from 'moment';
 import moment from 'moment';
-import {message} from 'ant-design-vue';
+import {message, notification} from 'ant-design-vue';
 import {TaskState} from '/@/constants/taskState';
 import {Task} from '/@/model/task';
 import taskApi from '/@/api/task';
@@ -40,12 +47,18 @@ const templates = ref(reactive({}));
 // key 格式为：yyyy-MM-dd
 // 一天只能填写一个计划不能多选
 const tasks: any = ref(reactive({}));
+const templateList = ref(reactive([]));
 
 const onSelect = (current: Moment) => {
   let key = current.format('yyyy-MM-DD');
   if (tasks._rawValue[key]) {
     taskApi.remove(key);
     list();
+    return;
+  }
+
+  if (templateList.value.length === 0) {
+    message.error('没有模板');
     return;
   }
 
@@ -66,7 +79,7 @@ const onSelect = (current: Moment) => {
     return;
   }
 
-  let task = {
+  let task: any = {
     id: key,
     templateId: selectedId.value,
     prepareSendTime: Number(t.format('x')),
@@ -98,6 +111,16 @@ const getTaskPrepareSendTime = (time: number) => {
 
 onMounted(() => {
   list();
+
+  nextTick(() => {
+    if (templateList.value.length === 0) {
+      notification.warning({
+        message: '没有模板',
+        description: '您还没有配置邮件模板，请转到模板管理页进行设置'
+      });
+      return;
+    }
+  });
 });
 </script>
 

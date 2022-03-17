@@ -54,7 +54,7 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      ts.value.fetch();
+      (ts as any).value.fetch();
 
       if (state.templateList.length === 0) {
         notification.warning({

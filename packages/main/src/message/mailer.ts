@@ -2,6 +2,7 @@ import {ipcMain, Notification} from "electron";
 import mailer from '../utils/mailer'
 import aiWriter from "/@/utils/aiWriter";
 import {Mail} from "../../../renderer/src/model/mail";
+const log = require('electron-log')
 
 ipcMain.on('mailer/send', async (event, args) => {
 
@@ -15,7 +16,7 @@ ipcMain.on('mailer/send', async (event, args) => {
   try {
     mail = JSON.parse(args)
   } catch (e) {
-    console.error(e)
+    log.error(e)
     if(notification) {
       notification.body = '参数异常'
       notification.show()
@@ -28,7 +29,7 @@ ipcMain.on('mailer/send', async (event, args) => {
   try {
     result = await aiWriter.write(mail.text, mail.length)
   } catch (e) {
-    console.error(e)
+    log.error(e)
     if(notification) {
       notification.body = 'AI续写异常'
       notification.show()
@@ -43,7 +44,7 @@ ipcMain.on('mailer/send', async (event, args) => {
     await mailer.sendMail(mail)
 
   } catch (e) {
-    console.error(e)
+    log.error(e)
     if(notification) {
       notification.body = '发送失败'
       notification.show()

@@ -2,6 +2,9 @@ import {app} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import fileUtils from '/@/utils/fileUtils';
+import {init} from '/@/utils/taskRunner';
+
+const log = require('electron-log');
 
 /**
  * Prevent multiple instances
@@ -49,7 +52,8 @@ app.whenReady()
   .then(() => import('./message/mailer'))
   .then(() => import('./message/notification'))
   .then(() => import('./message/task'))
-  .catch((e) => console.error('Failed create window:', e));
+  .then(init)
+  .catch((e) => log.error('Failed create window:', e));
 
 
 /**
@@ -63,7 +67,7 @@ if (import.meta.env.DEV) {
         allowFileAccess: true,
       },
     }))
-    .catch(e => console.error('Failed install extension:', e));
+    .catch(e => log.error('Failed install extension:', e));
 }
 
 /**

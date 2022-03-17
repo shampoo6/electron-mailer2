@@ -1,5 +1,6 @@
 import {ipcMain} from 'electron';
 import fileUtils from '/@/utils/fileUtils';
+import {add, remove} from '/@/utils/taskRunner';
 
 const documentName = 'tasks.json';
 
@@ -16,6 +17,8 @@ ipcMain.on('task/add', async (event, args) => {
   tasks = tasks || {};
   tasks[task.id] = task;
   await fileUtils.saveDocument(documentName, tasks);
+  // 添加任务到任务执行器
+  await add(task);
   event.returnValue = '';
 });
 
@@ -26,10 +29,11 @@ ipcMain.on('task/remove', async (event, args) => {
     return;
   }
 
+  await remove(args); // 删除任务
   let tasks = await fileUtils.getDocument(documentName);
   delete tasks[args];
   await fileUtils.saveDocument(documentName, tasks);
-  event.returnValue = ''
+  event.returnValue = '';
 });
 
 ipcMain.on('task/list', async (event, args) => {

@@ -26,7 +26,7 @@ const props = defineProps({
 const emit = defineEmits(['update:selectedId', 'update:templates', 'update:templateList', 'change']);
 
 // 当前选择的模板id
-const selectedId = ref(props.value);
+const selectedId = ref((props as any).value);
 // 模板选项
 const templateList = ref(reactive([]));
 // 模板表数据
@@ -45,7 +45,7 @@ const fetch = () => {
     if (key === 'defaultTemplateId') continue;
     rowData.push(data[key]);
   }
-  templateList.value = rowData;
+  (templateList as any).value = rowData;
   selectedId.value = data.defaultTemplateId ? data.defaultTemplateId : '';
 
   emit('update:templates', templates.value);

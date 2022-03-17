@@ -1,4 +1,5 @@
 const electron = require('electron');
+const log = require('electron-log')
 const path = require('path')
 const cp = require('child_process')
 
@@ -18,11 +19,11 @@ export default {
         [start, length],
         {cwd: aiWriterPath})
       p.on('close', (code: any) => {
-        console.log(`ai writer child process ${p.pid} exited with code ${code}`)
+        log.debug(`ai writer child process ${p.pid} exited with code ${code}`)
         resolve(text)
       })
       p.on('error', (err: any) => {
-        console.error(err)
+        log.error(err)
         reject(err)
       })
       p.stdout.on('data', (data: any) => {

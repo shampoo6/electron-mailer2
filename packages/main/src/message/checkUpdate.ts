@@ -1,6 +1,6 @@
 // Inital app
 import {ipcMain, BrowserWindow} from 'electron';
-
+const log = require('electron-log')
 const updater = require('electron-updater');
 const autoUpdater = updater.autoUpdater;
 
@@ -55,7 +55,7 @@ autoUpdater.on('update-downloaded', function (info: any) {
 // autoUpdater.checkForUpdates();
 
 function sendStatusToWindow(message: string) {
-  console.log(message);
+  log.info(message)
   let window = BrowserWindow.getAllWindows().find(w => !w.isDestroyed());
   (window as any).webContents.send('checkUpdate/info', message);
 }
