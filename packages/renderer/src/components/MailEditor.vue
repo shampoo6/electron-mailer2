@@ -55,127 +55,112 @@
   </div>
 </template>
 
-<script lang="ts">
-import {reactive, ref, toRefs, defineComponent} from 'vue'
-import * as Quill from 'quill'
-import {Mail} from "/@/model/mail";
-
+<script lang="ts" setup>
+import {reactive, ref, onMounted} from 'vue';
+import Quill from 'quill';
+import {Mail} from '/@/model/mail';
 
 const Delta = Quill.import('delta');
 
-export default defineComponent({
-  name: 'MailEditor',
-  setup() {
-    const state = reactive({
-      quill: null,
-      sign: null,
-      data: {
-        from: '',
-        pwd: '',
-        smtp: '',
-        sender: '',
-        to: '',
-        copy: '',
-        subject: '',
-        length: 0
-      },
-    })
+const formRef = ref(null);
+const editorRef = ref(null);
+const signRef = ref(null);
 
-    const formRef = ref(null)
-    const editorRef = ref(null)
-    const signRef = ref(null)
+const quill = ref(null);
+const sign = ref(null);
+const data = reactive({
+  from: '',
+  pwd: '',
+  smtp: '',
+  sender: '',
+  to: '',
+  copy: '',
+  subject: '',
+  length: 0
+});
+const toolbarOptions = reactive([
+  ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+  ['blockquote', 'code-block'],
 
-    const getData: () => Mail = () => {
-      let data = JSON.parse(JSON.stringify(state.data))
-      data.content = (state.quill as any).container.children[0].innerHTML
-      data.text = (state.quill as any).container.children[0].innerText
-      data.sign = (state.sign as any).container.children[0].innerHTML
-      return data
-    }
+  [{'header': 1}, {'header': 2}],               // custom button values
+  [{'list': 'ordered'}, {'list': 'bullet'}],
+  [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+  // [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+  [{'direction': 'rtl'}],                         // text direction
 
-    const setData = (data: Mail) => {
-      for (const key in state.data) {
-        (state.data as any)[key] = (data as any)[key]
-      }
-      (state.quill as any).container.children[0].innerHTML = data.content;
-      (state.sign as any).container.children[0].innerHTML = data.sign;
-    }
+  // [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+  [{'header': [1, 2, 3, 4, 5, 6, false]}],
 
-    return {
-      ...toRefs(state),
-      formRef,
-      editorRef,
-      signRef,
-      getData,
-      setData
-    }
-  },
-  data() {
-    return {
-      toolbarOptions: [
-        ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-        ['blockquote', 'code-block'],
+  [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+  [{'font': []}],
+  [{'align': []}],
 
-        [{'header': 1}, {'header': 2}],               // custom button values
-        [{'list': 'ordered'}, {'list': 'bullet'}],
-        [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
-        // [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
-        [{'direction': 'rtl'}],                         // text direction
+  ['link', 'image'],
 
-        // [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
-        [{'header': [1, 2, 3, 4, 5, 6, false]}],
+  ['clean']                                         // remove formatting button
+]);
 
-        [{'color': []}, {'background': []}],          // dropdown with defaults from theme
-        [{'font': []}],
-        [{'align': []}],
+const rules = reactive({
+  from: [
+    {required: true, message: '请输入寄件邮箱', trigger: 'blur'},
+  ],
+  pwd: [
+    {required: true, message: '请输入授权密码', trigger: 'blur'},
+  ],
+  smtp: [
+    {required: true, message: '请输入smtp服务器', trigger: 'blur'},
+  ],
+  sender: [
+    {required: true, message: '请输入寄件人姓名', trigger: 'blur'},
+  ],
+  to: [
+    {required: true, message: '请输入收件邮箱', trigger: 'blur'},
+  ],
+  subject: [
+    {required: true, message: '请输入主题', trigger: 'blur'},
+  ],
+});
 
-        ['link', 'image'],
+const labelCol = reactive({span: 4});
+const wrapperCol = reactive({span: 20});
 
-        ['clean']                                         // remove formatting button
-      ],
-      quill: null,
-      sign: null,
+const getData: () => Mail = () => {
+  let _data = JSON.parse(JSON.stringify(data));
+  _data.content = (quill as any)._rawValue.container.children[0].innerHTML;
+  _data.text = (quill as any)._rawValue.container.children[0].innerText;
+  _data.sign = (sign as any)._rawValue.container.children[0].innerHTML;
+  return _data;
+};
 
-      rules: {
-        from: [
-          {required: true, message: '请输入寄件邮箱', trigger: 'blur'},
-        ],
-        pwd: [
-          {required: true, message: '请输入授权密码', trigger: 'blur'},
-        ],
-        smtp: [
-          {required: true, message: '请输入smtp服务器', trigger: 'blur'},
-        ],
-        sender: [
-          {required: true, message: '请输入寄件人姓名', trigger: 'blur'},
-        ],
-        to: [
-          {required: true, message: '请输入收件邮箱', trigger: 'blur'},
-        ],
-        subject: [
-          {required: true, message: '请输入主题', trigger: 'blur'},
-        ],
-      },
-      labelCol: {span: 4},
-      wrapperCol: {span: 20},
-    }
-  },
-  mounted() {
-    const that: any = (this as any)
-    that.quill = new Quill(that.$refs.editorRef, {
-      theme: 'snow',
-      modules: {
-        toolbar: that.toolbarOptions
-      }
-    })
-    that.sign = new Quill(that.$refs.signRef, {
-      theme: 'snow',
-      modules: {
-        toolbar: that.toolbarOptions
-      }
-    })
+const setData = (data: Mail) => {
+  for (const key in data) {
+    (data as any)[key] = (data as any)[key];
   }
-})
+  (quill as any)._rawValue.container.children[0].innerHTML = data.content;
+  (sign as any)._rawValue.container.children[0].innerHTML = data.sign;
+};
+
+onMounted(() => {
+  debugger;
+  quill.value = new Quill(editorRef.value, {
+    theme: 'snow',
+    modules: {
+      toolbar: toolbarOptions
+    }
+  });
+  sign.value = new Quill(signRef.value, {
+    theme: 'snow',
+    modules: {
+      toolbar: toolbarOptions
+    }
+  });
+});
+
+defineExpose({
+  getData,
+  setData
+});
+
 </script>
 
 <style lang="scss" scoped>
