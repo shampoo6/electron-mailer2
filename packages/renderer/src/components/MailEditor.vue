@@ -132,16 +132,15 @@ const getData: () => Mail = () => {
   return _data;
 };
 
-const setData = (data: Mail) => {
+const setData = (mail: Mail) => {
   for (const key in data) {
-    (data as any)[key] = (data as any)[key];
+    (data as any)[key] = (mail as any)[key];
   }
-  (quill as any)._rawValue.container.children[0].innerHTML = data.content;
-  (sign as any)._rawValue.container.children[0].innerHTML = data.sign;
+  (quill as any)._rawValue.container.children[0].innerHTML = mail.content;
+  (sign as any)._rawValue.container.children[0].innerHTML = mail.sign;
 };
 
 onMounted(() => {
-  debugger;
   quill.value = new Quill(editorRef.value, {
     theme: 'snow',
     modules: {
