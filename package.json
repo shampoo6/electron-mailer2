@@ -1,6 +1,6 @@
 {
   "name": "electron-mailer2",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": false,
   "engines": {
     "node": ">=v16.13",
