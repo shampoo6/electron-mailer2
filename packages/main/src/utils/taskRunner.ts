@@ -18,7 +18,8 @@ const templateName = 'templates.json';
 
 // ai 续写程序路径
 let appPath = electron.app.getAppPath();
-let scriptsPath = import.meta.env.DEV ? path.join(appPath, 'packages/main/src/scripts') : path.join(appPath, 'scripts');
+let scriptsPath = import.meta.env.DEV ? path.join(appPath, 'app-scripts') : path.join(appPath, '../app-scripts');
+log.debug('运行任务脚本路径为: ' + scriptsPath);
 
 const bree = new Bree({
   logger: log,
