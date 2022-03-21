@@ -53,14 +53,11 @@
           </a-form-item>
         </a-form>
       </a-form-item>
-      <a-form-item label="邮件内容头" name="head">
+      <a-form-item label="邮件内容" name="head">
         <div>
           <div ref="editorRef">
           </div>
         </div>
-      </a-form-item>
-      <a-form-item label="AI续写长度" name="length">
-        <a-input type="number" v-model:value.number="data.length"/>
       </a-form-item>
       <a-form-item label="签名" name="sign">
         <div>
@@ -93,8 +90,7 @@ const data = reactive({
   sender: '',
   to: '',
   copy: '',
-  subject: '',
-  length: 0
+  subject: ''
 });
 const templateParams = reactive([] as TemplateParam[]);
 const toolbarOptions = reactive([
