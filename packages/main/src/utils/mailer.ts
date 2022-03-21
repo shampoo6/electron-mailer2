@@ -1,8 +1,10 @@
 import {Mail} from '../../../renderer/src/model/mail';
 import log from 'electron-log';
 import aiWriter from '/@/utils/aiWriter';
+import {TemplateParam} from '../../../renderer/src/model/TemplateParam';
 
 const {createTransport} = require('nodemailer');
+const ejs = require('ejs');
 
 export default {
   async sendMail(mail: Mail) {
@@ -16,19 +18,39 @@ export default {
       to: mail.to,
       cc: mail.copy,
       subject: mail.subject,
-      html: `<p>${mail.text}</p>${mail.sign}`
+      html: `<p>${mail.content}</p>${mail.sign}`
     });
   },
   async aiWriteAndSendMail(mail: Mail) {
-    let result: string;
-    try {
-      result = await aiWriter.write(mail.text, mail.length);
-    } catch (e) {
-      log.error(e);
-      return;
-    }
+    // 修改续写逻辑
 
-    mail.text = result;
+    // 定义模板参数
+    let params: any = {};
+
+    // ai 续写
+    if (Array.isArray(mail.params) && mail.params.length > 0) {
+      // 启动 ai 续写
+      let promises = mail.params.map((param: TemplateParam) => {
+        return aiWriter.write(param.value, param.count);
+      });
+
+      let results: any;
+      try {
+        results = await Promise.all(promises);
+      } catch (e) {
+        log.error(e);
+        return;
+      }
+
+      // 构造模板引擎参数
+      mail.params.forEach((p, i) => {
+        params[p.name] = results[i];
+      });
+    }
+    // 构造邮件html内容
+    // 转换html实体
+    mail.content = mail.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    mail.content = ejs.render(mail.content, params);
 
     try {
       await this.sendMail(mail);

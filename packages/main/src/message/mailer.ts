@@ -1,6 +1,5 @@
 import {ipcMain, Notification} from "electron";
 import mailer from '../utils/mailer'
-import aiWriter from "/@/utils/aiWriter";
 import {Mail} from "../../../renderer/src/model/mail";
 const log = require('electron-log')
 
@@ -25,24 +24,9 @@ ipcMain.on('mailer/send', async (event, args) => {
     return
   }
 
-  let result: string
+  // 通过配置的参数结合模板引擎得到邮件内容
   try {
-    result = await aiWriter.write(mail.text, mail.length)
-  } catch (e) {
-    log.error(e)
-    if(notification) {
-      notification.body = 'AI续写异常'
-      notification.show()
-    }
-    event.reply('mailer/send-reply', 'AI续写异常')
-    return
-  }
-
-  mail.text = result
-
-  try {
-    await mailer.sendMail(mail)
-
+    await mailer.aiWriteAndSendMail(mail)
   } catch (e) {
     log.error(e)
     if(notification) {

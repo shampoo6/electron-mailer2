@@ -36,6 +36,23 @@
       <a-form-item label="主题" name="subject">
         <a-input v-model:value="data.subject"/>
       </a-form-item>
+      <a-form-item label="模板变量">
+        <a-button type="primary" @click="addTemplateParam">+</a-button>
+        <a-form layout="inline" v-for="(param, i) in templateParams" :key="i" style="padding-top: 6px;">
+          <a-form-item label="参数名">
+            <a-input v-model:value="param.name"></a-input>
+          </a-form-item>
+          <a-form-item label="参数值">
+            <a-input v-model:value="param.value"></a-input>
+          </a-form-item>
+          <a-form-item label="数量">
+            <a-input v-model:value="param.count" type="number"></a-input>
+          </a-form-item>
+          <a-form-item>
+            <a-button type="danger" @click="()=>{remove(i)}">-</a-button>
+          </a-form-item>
+        </a-form>
+      </a-form-item>
       <a-form-item label="邮件内容头" name="head">
         <div>
           <div ref="editorRef">
@@ -59,6 +76,7 @@
 import {reactive, ref, onMounted} from 'vue';
 import Quill from 'quill';
 import {Mail} from '/@/model/mail';
+import {TemplateParam} from '/@/model/TemplateParam';
 
 const Delta = Quill.import('delta');
 
@@ -78,6 +96,7 @@ const data = reactive({
   subject: '',
   length: 0
 });
+const templateParams = reactive([] as TemplateParam[]);
 const toolbarOptions = reactive([
   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
   ['blockquote', 'code-block'],
@@ -124,11 +143,23 @@ const rules = reactive({
 const labelCol = reactive({span: 4});
 const wrapperCol = reactive({span: 20});
 
+const addTemplateParam = () => {
+  templateParams.push({
+    name: '',
+    value: '',
+    count: 50
+  });
+};
+
+const remove = (index: number) => {
+  templateParams.splice(index, 1);
+};
+
 const getData: () => Mail = () => {
   let _data = JSON.parse(JSON.stringify(data));
   _data.content = (quill as any)._rawValue.container.children[0].innerHTML;
-  _data.text = (quill as any)._rawValue.container.children[0].innerText;
   _data.sign = (sign as any)._rawValue.container.children[0].innerHTML;
+  _data.params = templateParams;
   return _data;
 };
 
@@ -138,6 +169,9 @@ const setData = (mail: Mail) => {
   }
   (quill as any)._rawValue.container.children[0].innerHTML = mail.content;
   (sign as any)._rawValue.container.children[0].innerHTML = mail.sign;
+  // 回显失败啦？
+  if (Array.isArray(mail.params) && mail.params.length > 0)
+    templateParams.splice(0, templateParams.length, ...templateParams.concat(mail.params) as any);
 };
 
 onMounted(() => {

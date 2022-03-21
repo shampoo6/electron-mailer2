@@ -1,4 +1,6 @@
 // 邮件
+import {TemplateParam} from '/@/model/TemplateParam';
+
 export interface Mail {
   // 寄件邮箱
   from: string
@@ -16,10 +18,8 @@ export interface Mail {
   subject: string
   // 邮件内容 存储的一个富文本的 html 字符串
   content: string
-  // 邮件内容的文本信息
-  text: string
   // 邮件签名 存储的一个富文本的 html 字符串
   sign: string,
-  // AI 续写的长度
-  length: number
+  // 模板参数
+  params: TemplateParam[]
 }
