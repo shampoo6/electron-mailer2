@@ -166,8 +166,10 @@ const setData = (mail: Mail) => {
   (quill as any)._rawValue.container.children[0].innerHTML = mail.content;
   (sign as any)._rawValue.container.children[0].innerHTML = mail.sign;
   // 回显失败啦？
-  if (Array.isArray(mail.params) && mail.params.length > 0)
-    templateParams.splice(0, templateParams.length, ...templateParams.concat(mail.params) as any);
+  if (Array.isArray(mail.params) && mail.params.length > 0) {
+    templateParams.splice(0, templateParams.length)
+    templateParams.push(...templateParams.concat(mail.params))
+  }
 };
 
 onMounted(() => {
