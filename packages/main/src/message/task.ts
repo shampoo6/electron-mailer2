@@ -1,6 +1,6 @@
 import {ipcMain} from 'electron';
 import fileUtils from '/@/utils/fileUtils';
-import {add, remove} from '/@/utils/taskRunner';
+import {add, remove} from '/@/utils/taskHandler';
 
 const documentName = 'tasks.json';
 

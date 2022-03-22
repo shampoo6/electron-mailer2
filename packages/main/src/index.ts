@@ -2,7 +2,7 @@ import {app} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import fileUtils from '/@/utils/fileUtils';
-import {init} from '/@/utils/taskRunner';
+import {scan} from '/@/utils/taskHandler';
 
 const log = require('electron-log');
 
@@ -52,7 +52,7 @@ app.whenReady()
   .then(() => import('./message/mailer'))
   .then(() => import('./message/notification'))
   .then(() => import('./message/task'))
-  .then(init)
+  .then(scan)
   .catch((e) => log.error('Failed create window:', e));
 
 
