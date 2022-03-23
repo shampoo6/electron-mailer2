@@ -1,8 +1,10 @@
-import {app} from 'electron';
+import {app, Menu, Tray} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import fileUtils from '/@/utils/fileUtils';
 import {scan} from '/@/utils/taskHandler';
+import path from 'path';
+import {mainTray} from '/@/tray';
 
 const log = require('electron-log');
 
@@ -26,9 +28,9 @@ app.disableHardwareAcceleration();
  * Shout down background process if all windows was closed
  */
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  // if (process.platform !== 'darwin') {
+  //   app.quit();
+  // }
 });
 
 /**
@@ -37,22 +39,24 @@ app.on('window-all-closed', () => {
 app.on('activate', restoreOrCreateWindow);
 
 
+
+
 /**
  * Create app window when background process will be ready
  */
 app.whenReady()
-  // .then(() => import('./checkUpdate'))
   .then(() => fileUtils.getAppDataPathWithExist('savedData'))
   .then((savePath) => {
     global.savePath = savePath; // 保存路径
     return Promise.resolve();
   })
-  .then(restoreOrCreateWindow)
   .then(() => import('./message/template'))
   .then(() => import('./message/mailer'))
   .then(() => import('./message/notification'))
   .then(() => import('./message/task'))
   .then(scan)
+  .then(mainTray)
+  .then(restoreOrCreateWindow)
   .catch((e) => log.error('Failed create window:', e));
 
 

@@ -10,7 +10,7 @@ if (process.env.VITE_APP_VERSION === undefined) {
 const config = {
   extraResources: [
     'run',
-    'app-scripts'
+    'assets'
   ],
   directories: {
     output: 'dist',

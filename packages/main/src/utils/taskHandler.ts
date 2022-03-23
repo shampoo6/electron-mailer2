@@ -1,19 +1,17 @@
-import path from 'path';
-import electron, {app, Notification} from 'electron';
+import {app, Notification} from 'electron';
 import {TaskWorkerData, TaskWorkerType} from '/@/model/TaskWorkerData';
 import Bree from 'bree';
 import {Template} from '../../../renderer/src/model/template';
 import {TaskState} from '../../../renderer/src/constants/taskState';
 import mailer from '/@/utils/mailer';
-import fileUtils from '/@/utils/fileUtils';
 import {Task} from '../../../renderer/src/model/task';
 import moment from 'moment';
+import fileUtils from './fileUtils'
 
 const log = require('electron-log');
 
 // ai 续写程序路径
-let appPath = electron.app.getAppPath();
-let scriptsPath = import.meta.env.DEV ? path.join(appPath, 'app-scripts') : path.join(appPath, '../app-scripts');
+let scriptsPath = fileUtils.getAssetsPath('js/job.js')
 log.debug('运行任务脚本路径为: ' + scriptsPath);
 
 const taskName = 'tasks.json';
@@ -27,7 +25,7 @@ let scanTaskConfig = {
   name: 'scan',
   interval: 'at 12:00 am',
   timeout: '5m',
-  path: path.join(scriptsPath, 'job.js'),
+  path: scriptsPath,
   worker: {
     workerData: {
       type: TaskWorkerType.Scan,
@@ -39,7 +37,7 @@ let scanTaskConfig = {
 let sendTaskConfig = {
   // name, 任务名需要添加
   // date: prepareSendTime.toDate(), 日期需要添加
-  path: path.join(scriptsPath, 'job.js'),
+  path: scriptsPath,
   worker: {
     workerData: {
       type: TaskWorkerType.Send,
