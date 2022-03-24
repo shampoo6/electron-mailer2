@@ -7,8 +7,9 @@ let tray;
 let iconPath = fileUtils.getAssetsPath('img/icon.png');
 
 export async function mainTray() {
-  // 取消界面中的菜单栏
-  Menu.setApplicationMenu(null);
+  // todo 取消界面中的菜单栏
+  // todo 暂时注释 方便在生产环境中调试
+  // Menu.setApplicationMenu(null);
 
   tray = new Tray(iconPath);
   const contextMenu = Menu.buildFromTemplate([

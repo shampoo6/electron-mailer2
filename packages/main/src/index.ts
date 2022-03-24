@@ -5,6 +5,7 @@ import fileUtils from '/@/utils/fileUtils';
 import {scan} from '/@/utils/taskHandler';
 import path from 'path';
 import {mainTray} from '/@/tray';
+import {startWithBoot} from '/@/startWithBoot';
 
 const log = require('electron-log');
 
@@ -39,8 +40,6 @@ app.on('window-all-closed', () => {
 app.on('activate', restoreOrCreateWindow);
 
 
-
-
 /**
  * Create app window when background process will be ready
  */
@@ -54,6 +53,7 @@ app.whenReady()
   .then(() => import('./message/mailer'))
   .then(() => import('./message/notification'))
   .then(() => import('./message/task'))
+  .then(startWithBoot)
   .then(scan)
   .then(mainTray)
   .then(restoreOrCreateWindow)

@@ -2,6 +2,8 @@ import {BrowserWindow} from 'electron';
 import {join} from 'path';
 import {URL} from 'url';
 
+let firstCheck = true; // 第一次启动检测，判断是否因该显示界面
+
 async function createWindow() {
   const browserWindow = new BrowserWindow({
     show: false, // Use 'ready-to-show' event to show window
@@ -19,11 +21,17 @@ async function createWindow() {
    * @see https://github.com/electron/electron/issues/25012
    */
   browserWindow.on('ready-to-show', () => {
-    browserWindow?.show();
-
     if (import.meta.env.DEV) {
       browserWindow?.webContents.openDevTools();
     }
+
+    if (firstCheck) {
+      firstCheck = false;
+      if (process.argv.indexOf('--openAsHidden') === -1) browserWindow?.show();
+      return;
+    }
+
+    browserWindow?.show();
   });
 
   /**
@@ -50,6 +58,8 @@ export async function restoreOrCreateWindow() {
   if (window === undefined) {
     window = await createWindow();
   }
+
+  if (!firstCheck && !window.isVisible()) window.show();
 
   if (window.isMinimized()) {
     window.restore();
