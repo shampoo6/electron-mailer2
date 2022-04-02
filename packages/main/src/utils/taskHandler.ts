@@ -6,12 +6,13 @@ import {TaskState} from '../../../renderer/src/constants/taskState';
 import mailer from '/@/utils/mailer';
 import {Task} from '../../../renderer/src/model/task';
 import moment from 'moment';
-import fileUtils from './fileUtils'
+import fileUtils from './fileUtils';
+import {getNotification, NotificationOptions} from '/@/utils/notification';
 
 const log = require('electron-log');
 
 // ai 续写程序路径
-let scriptsPath = fileUtils.getAssetsPath('js/job.js')
+let scriptsPath = fileUtils.getAssetsPath('js/job.js');
 log.debug('运行任务脚本路径为: ' + scriptsPath);
 
 const taskName = 'tasks.json';
@@ -86,11 +87,7 @@ async function doSend(data: any) {
   // ai续写并发送邮件
   await mailer.aiWriteAndSendMail(template.mail);
 
-  let notification = Notification.isSupported() ? new Notification({
-    title: 'electron-mailer2 消息',
-    silent: false,
-    urgency: 'critical'
-  }) : null;
+  let notification = getNotification({body: ''} as NotificationOptions);
 
   if (notification) {
     notification.body = `日期为 ${task.id} 的邮件已发送`;

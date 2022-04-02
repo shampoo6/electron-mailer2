@@ -2,6 +2,7 @@ import {Mail} from '../../../renderer/src/model/mail';
 import log from 'electron-log';
 import aiWriter from '/@/utils/aiWriter';
 import {TemplateParam} from '../../../renderer/src/model/TemplateParam';
+import moment from 'moment';
 
 const {createTransport} = require('nodemailer');
 const ejs = require('ejs');
@@ -51,6 +52,13 @@ export default {
     // 转换html实体
     mail.content = mail.content.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     mail.content = ejs.render(mail.content, params);
+
+
+    // subject 模板替换
+    // 内置变量：
+    // date：日期
+    mail.subject = mail.subject.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    mail.subject =  ejs.render(mail.subject, { date: moment().format('YYYY-MM-DD') });
 
     try {
       await this.sendMail(mail);

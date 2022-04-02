@@ -1,9 +1,8 @@
-import {app, Menu, Tray} from 'electron';
+import {app} from 'electron';
 import './security-restrictions';
 import {restoreOrCreateWindow} from '/@/mainWindow';
 import fileUtils from '/@/utils/fileUtils';
 import {scan} from '/@/utils/taskHandler';
-import path from 'path';
 import {mainTray} from '/@/tray';
 import {startWithBoot} from '/@/startWithBoot';
 
@@ -49,10 +48,10 @@ app.whenReady()
     global.savePath = savePath; // 保存路径
     return Promise.resolve();
   })
-  .then(() => import('./message/template'))
-  .then(() => import('./message/mailer'))
-  .then(() => import('./message/notification'))
-  .then(() => import('./message/task'))
+  .then(import('./message/template') as any)
+  .then(import('./message/mailer') as any)
+  .then(import('./message/notification') as any)
+  .then(import('./message/task') as any)
   .then(startWithBoot)
   .then(scan)
   .then(mainTray)
